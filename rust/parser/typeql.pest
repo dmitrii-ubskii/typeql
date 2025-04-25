@@ -198,7 +198,9 @@ definable = { ( definition_type ~ SEMICOLON ) | definition_function | definition
 
 // TYPE DEFINITION =============================================================
 
-definition_type = { kind? ~ label ~ COMMA? ~ ( ( annotations | type_capability ) ~ ( COMMA ~ type_capability )* ~ COMMA? )? }
+definition_type = { kind ~ label ~ COMMA? ~ ( ( annotations | type_capability ) ~ ( COMMA ~ type_capability )* ~ COMMA? )?
+                  | label ~ COMMA? ~ ( annotations | type_capability ) ~ ( COMMA ~ type_capability )* ~ COMMA?
+                  }
 type_capability = { type_capability_base ~ annotations? }
 type_capability_base = { sub_declaration | value_type_declaration | alias_declaration
                        | owns_declaration | plays_declaration | relates_declaration
@@ -362,7 +364,7 @@ range_bound = _{ value_literal }
 
 // TYPEQL SYNTAX KEYWORDS ======================================================
 
-reserved = { WITH | MATCH | FETCH | UPDATE | DEFINE | UNDEFINE | REDEFINE | INSERT | PUT | DELETE | END
+reserved = { WITH | MATCH | FETCH | UPDATE | DEFINE | UNDEFINE | REDEFINE | INSERT | PUT | DELETE
            | ENTITY | RELATION | ATTRIBUTE | ROLE
            | ASC | DESC
            | STRUCT | FUN | RETURN
@@ -379,6 +381,7 @@ unreserved = { ABS | CEIL | FLOOR | ROUND | LENGTH
              | COUNT | MAX | MIN | MEAN | MEDIAN | STD | SUM | LIST
              | VALUE | SELECT | SORT | LIMIT | OFFSET | GROUP | LIKE | CONTAINS
              | BOOLEAN | INTEGER | DOUBLE | DECIMAL | DATETIME_TZ | DATETIME | DATE | DURATION | STRING
+             | END
              }
 
 // QUERY COMMAND KEYWORDS
