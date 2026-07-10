@@ -130,6 +130,15 @@ attribute my-type,
 }
 
 #[test]
+fn test_define_double_array_value_type_query() {
+    let query = r#"define
+attribute embedding,
+    value double[64];"#;
+    let parsed = parse_query(query).unwrap();
+    assert_valid_eq_repr!(expected, parsed, query);
+}
+
+#[test]
 fn define_attribute_type_regex() {
     let query = r#"define
 attribute digit,

@@ -9,6 +9,7 @@ use std::fmt;
 use crate::{
     common::{Span, Spanned, identifier::Identifier, token},
     pretty::Pretty,
+    value::IntegerLiteral,
     variable::Variable,
 };
 
@@ -91,10 +92,39 @@ impl fmt::Display for ScopedLabel {
     }
 }
 
+// fixed-size array value type; only `double` is supported (e.g. double[64])
+#[derive(Clone, Debug, Hash, Eq, PartialEq)]
+pub struct BuiltinValueTypeArray {
+    pub span: Option<Span>,
+    pub token: token::ValueType,
+    pub length: IntegerLiteral,
+}
+
+impl BuiltinValueTypeArray {
+    pub fn new(span: Option<Span>, token: token::ValueType, length: IntegerLiteral) -> Self {
+        Self { span, token, length }
+    }
+}
+
+impl Spanned for BuiltinValueTypeArray {
+    fn span(&self) -> Option<Span> {
+        self.span
+    }
+}
+
+impl Pretty for BuiltinValueTypeArray {}
+
+impl fmt::Display for BuiltinValueTypeArray {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}[{}]", self.token, self.length)
+    }
+}
+
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub enum NamedType {
     Label(Label),
     BuiltinValueType(BuiltinValueType),
+    BuiltinValueTypeArray(BuiltinValueTypeArray),
 }
 
 impl Spanned for NamedType {
@@ -102,6 +132,7 @@ impl Spanned for NamedType {
         match self {
             Self::Label(inner) => inner.span(),
             Self::BuiltinValueType(inner) => inner.span(),
+            Self::BuiltinValueTypeArray(inner) => inner.span(),
         }
     }
 }
@@ -111,6 +142,7 @@ impl fmt::Display for NamedType {
         match self {
             Self::Label(inner) => fmt::Display::fmt(inner, f),
             Self::BuiltinValueType(inner) => fmt::Display::fmt(inner, f),
+            Self::BuiltinValueTypeArray(inner) => fmt::Display::fmt(inner, f),
         }
     }
 }
