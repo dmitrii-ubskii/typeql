@@ -112,7 +112,7 @@ thing_constraint = { isa_constraint | iid_constraint | has_constraint | links_co
 isa_constraint = { ISA_ ~ type_ref ~ ( relation | comparison | expression | value_literal | expression_struct )? }
 iid_constraint = { IID ~ iid_value }
 has_constraint = { HAS ~ type_ref_list ~ ( comparison | expression_list | var )
-                 | HAS ~ type_ref ~ ( comparison | expression_value | var )
+                 | HAS ~ type_ref ~ ( comparison | expression_list | expression_value | var )
                  | HAS ~ var
                  }
 links_constraint = { LINKS ~ relation }

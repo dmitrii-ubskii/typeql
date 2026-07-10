@@ -46,6 +46,15 @@ $z isa pokemon,
 }
 
 #[test]
+fn test_insert_double_array_value() {
+    let query = r#"insert
+$x isa document,
+    has embedding [0.1, 0.2, 0.3];"#;
+    let parsed = parse_query(query).unwrap();
+    assert_valid_eq_repr!(expected, parsed, query);
+}
+
+#[test]
 fn test_update_query() {
     let query = r#"match
 $x isa person,
