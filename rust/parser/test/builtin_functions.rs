@@ -26,6 +26,19 @@ let $gross = min($net * 1.21, $net + 100.0);"#;
 }
 
 #[test]
+fn test_function_cosine_similarity() {
+    let query = r#"match
+$doc isa document,
+    has embedding $e;
+let $score = cosine_similarity($e, [0.1, 0.2, 0.3]);
+$score >= 0.8;
+sort $score desc;
+limit 10;"#;
+    let parsed = parse_query(query).unwrap();
+    assert_valid_eq_repr!(expected, parsed, query);
+}
+
+#[test]
 fn test_function_max() {
     let query = r#"match
 $x isa commodity,
