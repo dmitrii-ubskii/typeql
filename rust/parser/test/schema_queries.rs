@@ -130,10 +130,10 @@ attribute my-type,
 }
 
 #[test]
-fn test_define_double_array_value_type_query() {
+fn test_define_vector_value_type_query() {
     let query = r#"define
 attribute embedding,
-    value double[64];"#;
+    value vector(64, f8);"#;
     let parsed = parse_query(query).unwrap();
     assert_valid_eq_repr!(expected, parsed, query);
 }

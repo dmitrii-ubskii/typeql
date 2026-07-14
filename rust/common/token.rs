@@ -189,6 +189,11 @@ string_enum! { ValueType
     String = "string",
 }
 
+string_enum! { VectorPrecision
+    F8 = "f8",
+    F64 = "f64",
+}
+
 string_enum! { Order
     Asc = "asc",
     Desc = "desc",

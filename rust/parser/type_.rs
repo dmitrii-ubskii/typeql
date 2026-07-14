@@ -9,8 +9,8 @@ use crate::{
     ScopedLabel,
     common::{Spanned, error::TypeQLError, token},
     type_::{
-        BuiltinValueType, BuiltinValueTypeArray, Label, NamedType, NamedTypeAny, NamedTypeList, NamedTypeOptional,
-        TypeRef, TypeRefList,
+        BuiltinValueType, Label, NamedType, NamedTypeAny, NamedTypeList, NamedTypeOptional, TypeRef, TypeRefList,
+        VectorType,
     },
 };
 
@@ -95,21 +95,22 @@ pub(super) fn visit_value_type(node: Node<'_>) -> NamedType {
     debug_assert_eq!(node.as_rule(), Rule::value_type);
     let child = node.into_child();
     match child.as_rule() {
-        Rule::value_type_primitive_array => NamedType::BuiltinValueTypeArray(visit_value_type_primitive_array(child)),
+        Rule::value_type_vector => NamedType::Vector(visit_value_type_vector(child)),
         Rule::value_type_primitive => NamedType::BuiltinValueType(visit_value_type_primitive(child)),
         Rule::label => NamedType::Label(visit_label(child)),
         _ => unreachable!("{}", TypeQLError::IllegalGrammar { input: child.as_str().to_owned() }),
     }
 }
 
-pub(super) fn visit_value_type_primitive_array(node: Node<'_>) -> BuiltinValueTypeArray {
-    debug_assert_eq!(node.as_rule(), Rule::value_type_primitive_array);
+pub(super) fn visit_value_type_vector(node: Node<'_>) -> VectorType {
+    debug_assert_eq!(node.as_rule(), Rule::value_type_vector);
     let span = node.span();
     let mut children = node.into_children();
-    children.skip_expected(Rule::DOUBLE);
+    children.skip_expected(Rule::VECTOR);
     let length = visit_integer_literal(children.consume_expected(Rule::integer_literal));
+    let precision = token::VectorPrecision::from(children.consume_expected(Rule::vector_precision).as_str());
     debug_assert_eq!(children.try_consume_any(), None);
-    BuiltinValueTypeArray::new(span, token::ValueType::Double, length)
+    VectorType::new(span, length, precision)
 }
 
 pub(super) fn visit_value_type_optional(node: Node<'_>) -> NamedTypeOptional {

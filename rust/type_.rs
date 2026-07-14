@@ -92,31 +92,31 @@ impl fmt::Display for ScopedLabel {
     }
 }
 
-// fixed-size array value type; only `double` is supported (e.g. double[64])
+// fixed-size vector embedding value type, e.g. vector(64, f8)
 #[derive(Clone, Debug, Hash, Eq, PartialEq)]
-pub struct BuiltinValueTypeArray {
+pub struct VectorType {
     pub span: Option<Span>,
-    pub token: token::ValueType,
     pub length: IntegerLiteral,
+    pub precision: token::VectorPrecision,
 }
 
-impl BuiltinValueTypeArray {
-    pub fn new(span: Option<Span>, token: token::ValueType, length: IntegerLiteral) -> Self {
-        Self { span, token, length }
+impl VectorType {
+    pub fn new(span: Option<Span>, length: IntegerLiteral, precision: token::VectorPrecision) -> Self {
+        Self { span, length, precision }
     }
 }
 
-impl Spanned for BuiltinValueTypeArray {
+impl Spanned for VectorType {
     fn span(&self) -> Option<Span> {
         self.span
     }
 }
 
-impl Pretty for BuiltinValueTypeArray {}
+impl Pretty for VectorType {}
 
-impl fmt::Display for BuiltinValueTypeArray {
+impl fmt::Display for VectorType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}[{}]", self.token, self.length)
+        write!(f, "vector({}, {})", self.length, self.precision)
     }
 }
 
@@ -124,7 +124,7 @@ impl fmt::Display for BuiltinValueTypeArray {
 pub enum NamedType {
     Label(Label),
     BuiltinValueType(BuiltinValueType),
-    BuiltinValueTypeArray(BuiltinValueTypeArray),
+    Vector(VectorType),
 }
 
 impl Spanned for NamedType {
@@ -132,7 +132,7 @@ impl Spanned for NamedType {
         match self {
             Self::Label(inner) => inner.span(),
             Self::BuiltinValueType(inner) => inner.span(),
-            Self::BuiltinValueTypeArray(inner) => inner.span(),
+            Self::Vector(inner) => inner.span(),
         }
     }
 }
@@ -142,7 +142,7 @@ impl fmt::Display for NamedType {
         match self {
             Self::Label(inner) => fmt::Display::fmt(inner, f),
             Self::BuiltinValueType(inner) => fmt::Display::fmt(inner, f),
-            Self::BuiltinValueTypeArray(inner) => fmt::Display::fmt(inner, f),
+            Self::Vector(inner) => fmt::Display::fmt(inner, f),
         }
     }
 }
