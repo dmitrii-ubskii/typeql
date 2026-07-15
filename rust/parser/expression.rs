@@ -90,6 +90,7 @@ fn visit_expression_base(node: Node<'_>) -> Expression {
         Rule::expression_parenthesis => Expression::Paren(Box::new(visit_expression_parenthesis(child))),
         Rule::label_scoped => Expression::ScopedLabel(visit_label_scoped(child)),
         Rule::label => Expression::Label(visit_label(child)),
+        Rule::expression_struct => Expression::Value(visit_expression_struct(child)),
         _ => unreachable!("{}", TypeQLError::IllegalGrammar { input: child.as_str().to_owned() }),
     }
 }

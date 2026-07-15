@@ -149,7 +149,14 @@ comparator = { EQ | NEQ | GTE | GT | LTE | LT | CONTAINS | LIKE }
 expression = { expression_list | expression_value }
 
 expression_value = { expression_base ~ expression_postfix* ~ ( expression_operator ~ expression_base ~ expression_postfix* )* }
-expression_base = { expression_parenthesis | expression_function | value_literal | var | label_scoped | label }
+expression_base = { expression_parenthesis
+                  | expression_function
+                  | value_literal
+                  | var
+                  | expression_struct
+                  | label_scoped
+                  | label
+                  }
 
 expression_operator = _{ POWER | TIMES | DIVIDE | MODULO | PLUS | MINUS }
 expression_postfix = _{ field_access | list_index }
@@ -167,7 +174,8 @@ expression_list_new = { SQ_BRACKET_OPEN ~ expression_value ~ ( COMMA ~ expressio
 expression_list_subrange = { var ~ list_range }
 list_range = { SQ_BRACKET_OPEN ~ expression_value ~ DOUBLE_DOT ~ expression_value ~ SQ_BRACKET_CLOSE }
 
-expression_struct = { CURLY_OPEN ~ struct_key ~ COLON ~ struct_value ~ CURLY_CLOSE }
+expression_struct = { label ~ CURLY_OPEN ~ ( struct_field ~ ( COMMA ~ struct_field )* ~ COMMA? )? ~ CURLY_CLOSE }
+struct_field = { struct_key ~ COLON ~ struct_value }
 struct_value = { expression_value | expression_struct }
 
 // FETCH QUERY =================================================================
@@ -254,7 +262,7 @@ definition_struct_field = { identifier ~ VALUE ~ struct_field_value_type ~ annot
 
 struct_field_value_type = { value_type_optional | value_type }
 
-struct_deconstruct = { CURLY_OPEN ~ struct_key ~ COLON ~ struct_deconstruct_value ~ CURLY_CLOSE }
+struct_deconstruct = { label ~ CURLY_OPEN ~ struct_key ~ COLON ~ struct_deconstruct_value ~ CURLY_CLOSE }
 struct_deconstruct_value = { var | struct_deconstruct }
 
 // REDEFINE QUERY ==============================================================

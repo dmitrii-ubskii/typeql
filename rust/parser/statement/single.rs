@@ -13,7 +13,7 @@ use crate::{
         IntoChildNodes, Node, Rule, RuleMatcher,
         expression::{visit_expression, visit_expression_function, visit_expression_list, visit_expression_value},
         statement::visit_comparison,
-        visit_identifier, visit_var, visit_vars_assignment,
+        visit_identifier, visit_label, visit_var, visit_vars_assignment,
     },
     statement::{
         Assignment, AssignmentPattern, DeconstructField, InIterable, Is, StructDeconstruct,
@@ -48,6 +48,8 @@ fn visit_struct_deconstruct(node: Node<'_>) -> StructDeconstruct {
     let span = node.span();
     let mut children = node.into_children();
 
+    let label = visit_label(children.consume_expected(Rule::label));
+
     let field_map = children
         .by_ref()
         .tuple_windows()
@@ -55,7 +57,7 @@ fn visit_struct_deconstruct(node: Node<'_>) -> StructDeconstruct {
         .collect();
 
     debug_assert_eq!(children.try_consume_any(), None);
-    StructDeconstruct::new(span, field_map)
+    StructDeconstruct::new(span, label, field_map)
 }
 
 fn visit_struct_deconstruct_value(node: Node<'_>) -> DeconstructField {
