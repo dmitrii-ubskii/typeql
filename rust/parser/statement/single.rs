@@ -48,7 +48,7 @@ fn visit_struct_deconstruct(node: Node<'_>) -> StructDeconstruct {
     let span = node.span();
     let mut children = node.into_children();
 
-    let label = visit_label(children.consume_expected(Rule::label));
+    let struct_name = visit_label(children.consume_expected(Rule::label));
 
     let field_map = children
         .by_ref()
@@ -57,7 +57,7 @@ fn visit_struct_deconstruct(node: Node<'_>) -> StructDeconstruct {
         .collect();
 
     debug_assert_eq!(children.try_consume_any(), None);
-    StructDeconstruct::new(span, label, field_map)
+    StructDeconstruct::new(span, struct_name, field_map)
 }
 
 fn visit_struct_deconstruct_value(node: Node<'_>) -> DeconstructField {
