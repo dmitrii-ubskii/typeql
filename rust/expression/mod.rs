@@ -161,7 +161,7 @@ impl fmt::Display for Paren {
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct ListIndex {
     pub receiver: Expression,
-    pub index: Expression,
+    pub index: Expression, // FIXME: this should be an Index struct the span of which includes the square brackets
 }
 
 impl ListIndex {
@@ -172,7 +172,9 @@ impl ListIndex {
 
 impl Spanned for ListIndex {
     fn span(&self) -> Option<Span> {
-        None
+        let rspan = self.receiver.span()?;
+        let lspan = self.index.span()?;
+        Some(Span { begin_offset: rspan.begin_offset, end_offset: lspan.end_offset })
     }
 }
 
