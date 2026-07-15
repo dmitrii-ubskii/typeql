@@ -68,7 +68,7 @@ fn visit_struct_deconstruct_value(node: Node<'_>) -> DeconstructField {
     }
 }
 
-fn visit_struct_key(node: Node<'_>) -> Identifier {
+pub(crate) fn visit_struct_key(node: Node<'_>) -> Identifier {
     debug_assert_eq!(node.as_rule(), Rule::struct_key);
     visit_identifier(node.into_child())
 }

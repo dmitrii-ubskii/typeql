@@ -109,7 +109,7 @@ statement_thing_relation_anonymous = { !reserved ~ type_ref? ~ relation ~ ( COMM
 thing_constraint_list = {thing_constraint ~ ( COMMA ~ thing_constraint )* ~ COMMA?}
 
 thing_constraint = { isa_constraint | iid_constraint | has_constraint | links_constraint }
-isa_constraint = { ISA_ ~ type_ref ~ ( relation | comparison | expression | value_literal | expression_struct )? }
+isa_constraint = { ISA_ ~ type_ref ~ ( relation | comparison | expression )? }
 iid_constraint = { IID ~ iid_value }
 has_constraint = { HAS ~ type_ref_list ~ ( comparison | expression_list | var )
                  | HAS ~ type_ref ~ ( comparison | expression_value | var )
@@ -148,14 +148,15 @@ comparator = { EQ | NEQ | GTE | GT | LTE | LT | CONTAINS | LIKE }
 
 expression = { expression_list | expression_value }
 
-expression_value = { expression_base ~ ( expression_operator ~ expression_base )* }
-expression_base = { expression_list_index | expression_parenthesis | expression_function | value_literal | var | label_scoped | label }
+expression_value = { expression_base ~ expression_postfix* ~ ( expression_operator ~ expression_base ~ expression_postfix* )* }
+expression_base = { expression_parenthesis | expression_function | value_literal | var | label_scoped | label }
 
 expression_operator = _{ POWER | TIMES | DIVIDE | MODULO | PLUS | MINUS }
+expression_postfix = _{ field_access | list_index }
 expression_parenthesis = { PAREN_OPEN ~ expression_value ~ PAREN_CLOSE }
 
-expression_list_index = { var ~ list_index }
 list_index = { SQ_BRACKET_OPEN ~ expression_value ~ SQ_BRACKET_CLOSE }
+field_access = { DOT ~ struct_key }
 
 expression_function = { expression_function_name ~ PAREN_OPEN ~ expression_arguments? ~ PAREN_CLOSE }
 expression_function_name = { builtin_func_name | identifier }
