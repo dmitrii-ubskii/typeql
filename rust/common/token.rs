@@ -190,8 +190,7 @@ string_enum! { ValueType
 }
 
 string_enum! { VectorPrecision
-    F8 = "f8",
-    F64 = "f64",
+    Float32 = "float32",
 }
 
 string_enum! { Order

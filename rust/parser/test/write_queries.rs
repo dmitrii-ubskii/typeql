@@ -46,10 +46,20 @@ $z isa pokemon,
 }
 
 #[test]
-fn test_insert_double_array_value() {
+fn test_insert_vector_value() {
     let query = r#"insert
 $x isa document,
-    has embedding [0.1, 0.2, 0.3];"#;
+    has embedding vector([1.0, 2.0, 3.0], "float32");"#;
+    let parsed = parse_query(query).unwrap();
+    assert_valid_eq_repr!(expected, parsed, query);
+}
+
+#[test]
+fn test_insert_vector_value_given() {
+    let query = r#"given $e: vector(64, "float32");
+insert
+$x isa document,
+    has embedding $e;"#;
     let parsed = parse_query(query).unwrap();
     assert_valid_eq_repr!(expected, parsed, query);
 }

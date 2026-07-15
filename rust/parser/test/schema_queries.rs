@@ -133,7 +133,7 @@ attribute my-type,
 fn test_define_vector_value_type_query() {
     let query = r#"define
 attribute embedding,
-    value vector(64, f8);"#;
+    value vector(64, "float32");"#;
     let parsed = parse_query(query).unwrap();
     assert_valid_eq_repr!(expected, parsed, query);
 }

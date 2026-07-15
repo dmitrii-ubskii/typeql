@@ -120,7 +120,6 @@ fn visit_has_constraint(node: Node<'_>) -> Has {
                     Expression::Variable(variable) => HasValue::Variable(variable),
                     expr => HasValue::Expression(expr),
                 },
-                Rule::expression_list => HasValue::Expression(visit_expression_list(value_node)),
                 _ => unreachable!("{}", TypeQLError::IllegalGrammar { input: value_node.as_str().to_owned() }),
             };
             Has::new(span, type_, value)

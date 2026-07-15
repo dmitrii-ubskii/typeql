@@ -92,7 +92,7 @@ impl fmt::Display for ScopedLabel {
     }
 }
 
-// fixed-size vector embedding value type, e.g. vector(64, f8)
+// fixed-size vector embedding value type, e.g. vector(64, "float32")
 #[derive(Clone, Debug, Hash, Eq, PartialEq)]
 pub struct VectorType {
     pub span: Option<Span>,
@@ -116,7 +116,7 @@ impl Pretty for VectorType {}
 
 impl fmt::Display for VectorType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "vector({}, {})", self.length, self.precision)
+        write!(f, "vector({}, \"{}\")", self.length, self.precision)
     }
 }
 
