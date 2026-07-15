@@ -135,7 +135,7 @@ pattern_try_deletable = { TRY ~ CURLY_OPEN ~ ( statement_deletable ~ SEMICOLON )
 statement_is = { var ~ IS ~ var }
 statement_comparison = { expression_value ~ comparison }
 statement_assignment = { LET ~ assignment_left ~ ASSIGN ~ expression }
-assignment_left = { vars_assignment | struct_destructor }
+assignment_left = { vars_assignment | struct_deconstruct }
 statement_in = { LET ~ vars_assignment ~ IN ~ ( expression_function | expression_list ) }
 
 vars_assignment = { var_assignment ~ ( COMMA ~ var_assignment )* ~ COMMA? }
@@ -253,8 +253,8 @@ definition_struct_field = { identifier ~ VALUE ~ struct_field_value_type ~ annot
 
 struct_field_value_type = { value_type_optional | value_type }
 
-struct_destructor = { CURLY_OPEN ~ struct_key ~ COLON ~ struct_destructor_value ~ CURLY_CLOSE }
-struct_destructor_value = { var | struct_destructor }
+struct_deconstruct = { CURLY_OPEN ~ struct_key ~ COLON ~ struct_deconstruct_value ~ CURLY_CLOSE }
+struct_deconstruct_value = { var | struct_deconstruct }
 
 // REDEFINE QUERY ==============================================================
 
