@@ -214,7 +214,6 @@ impl fmt::Display for List {
     }
 }
 
-// fixed-size vector embedding literal, e.g. vector([1.0, 2.0, 3.0], "float32")
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct VectorLiteral {
     pub span: Option<Span>,

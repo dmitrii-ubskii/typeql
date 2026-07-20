@@ -149,9 +149,7 @@ comparator = { EQ | NEQ | GTE | GT | LTE | LT | CONTAINS | LIKE }
 expression = { expression_list | expression_value }
 
 expression_value = { expression_base ~ ( expression_operator ~ expression_base )* }
-// vector_literal must precede expression_function: `vector(...)` would otherwise parse as a call to a function named "vector"
-expression_base = { expression_list_index | expression_parenthesis | vector_literal | expression_function | value_literal | var | label_scoped | label }
-vector_literal = { VECTOR ~ PAREN_OPEN ~ expression_list ~ COMMA ~ vector_precision ~ PAREN_CLOSE }
+expression_base = { expression_list_index | expression_parenthesis | expression_function | vector_literal | value_literal | var | label_scoped | label }
 
 expression_operator = _{ POWER | TIMES | DIVIDE | MODULO | PLUS | MINUS }
 expression_parenthesis = { PAREN_OPEN ~ expression_value ~ PAREN_CLOSE }
@@ -170,6 +168,8 @@ list_range = { SQ_BRACKET_OPEN ~ expression_value ~ DOUBLE_DOT ~ expression_valu
 
 expression_struct = { CURLY_OPEN ~ struct_key ~ COLON ~ struct_value ~ CURLY_CLOSE }
 struct_value = { expression_value | expression_struct }
+
+vector_literal = { VECTOR ~ PAREN_OPEN ~ expression_list ~ COMMA ~ vector_precision ~ PAREN_CLOSE }
 
 // FETCH QUERY =================================================================
 
@@ -322,7 +322,6 @@ identifier_var = @{ IDENTIFIER_VAR_H ~ IDENTIFIER_VAR_T* ~ WB }
 value_type = { value_type_vector | value_type_primitive | label }
 value_type_optional = { value_type ~ QUESTION }
 value_type_list = { value_type ~ SQ_BRACKET_OPEN ~ SQ_BRACKET_CLOSE }
-// fixed-size vector embedding, e.g. vector(64, "float32")
 value_type_vector = { VECTOR ~ PAREN_OPEN ~ integer_literal ~ COMMA ~ vector_precision ~ PAREN_CLOSE }
 vector_precision = @{ "\"" ~ "float32" ~ "\"" }
 

@@ -26,13 +26,11 @@ let $gross = min($net * 1.21, $net + 100.0);"#;
 }
 
 #[test]
-fn test_function_cosine_similarity() {
+fn test_function_cosine_similarity_search() {
     let query = r#"match
+let $e in cosine_similarity_search(embedding, vector([0.1, 0.2, 0.3], "float32"), 0.8);
 $doc isa document,
     has embedding $e;
-let $score = cosine_similarity($e, [0.1, 0.2, 0.3]);
-$score >= 0.8;
-sort $score desc;
 limit 10;"#;
     let parsed = parse_query(query).unwrap();
     assert_valid_eq_repr!(expected, parsed, query);

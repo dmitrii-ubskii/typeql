@@ -92,7 +92,6 @@ impl fmt::Display for ScopedLabel {
     }
 }
 
-// fixed-size vector embedding value type, e.g. vector(64, "float32")
 #[derive(Clone, Debug, Hash, Eq, PartialEq)]
 pub struct VectorType {
     pub span: Option<Span>,
