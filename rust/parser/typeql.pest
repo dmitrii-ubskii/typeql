@@ -149,7 +149,7 @@ comparator = { EQ | NEQ | GTE | GT | LTE | LT | CONTAINS | LIKE }
 expression = { expression_list | expression_value }
 
 expression_value = { expression_base ~ ( expression_operator ~ expression_base )* }
-expression_base = { expression_list_index | expression_parenthesis | expression_function | vector_literal | value_literal | var | label_scoped | label }
+expression_base = { expression_list_index | expression_parenthesis | vector_literal | expression_function | value_literal | var | label_scoped | label }
 
 expression_operator = _{ POWER | TIMES | DIVIDE | MODULO | PLUS | MINUS }
 expression_parenthesis = { PAREN_OPEN ~ expression_value ~ PAREN_CLOSE }
